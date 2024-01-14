@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
-
-import { Providers } from "@/providers";
-
-import "react-toastify/dist/ReactToastify.css";
+import { NavHeader } from "@/components/NavHeader";
 
 export const metadata: Metadata = {
-  title: "",
-  description: "",
+  title: "Dashboard",
+  description: "Tela controle de produtos",
 };
 
 export default function RootLayout({
@@ -18,7 +14,8 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        <Providers>{children}</Providers>
+        <NavHeader />
+        {children}
       </body>
     </html>
   );
