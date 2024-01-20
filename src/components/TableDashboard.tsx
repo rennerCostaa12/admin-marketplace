@@ -102,6 +102,7 @@ export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
               <Th>N° DO PEDIDO</Th>
               <Th>STATUS</Th>
               <Th>CLIENTE</Th>
+              <Th>PREÇO</Th>
               <Th isNumeric>AÇÕES</Th>
             </Tr>
           </Thead>
@@ -120,6 +121,12 @@ export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
                     </Badge>
                   </Td>
                   <Td fontWeight="bold">{value.client.username}</Td>
+                  <Td fontWeight="bold">
+                    {value.total.toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </Td>
                   <Td isNumeric>
                     <ButtonEditSales dataSales={value} />
                   </Td>

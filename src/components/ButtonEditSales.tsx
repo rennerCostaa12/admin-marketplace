@@ -22,8 +22,6 @@ import { useState } from "react";
 import { SalesProps } from "@/Types";
 import { Api } from "@/configs/Api";
 
-import { useRouter } from "next/navigation";
-
 interface ButtonEditSalesProps {
   dataSales: SalesProps;
 }
@@ -49,20 +47,22 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
 
   const { isOpen, onToggle, onClose } = useDisclosure();
 
-  const router = useRouter();
   const toast = useToast();
 
-  const sendNotificationApp = async (message: string) => {
+  const sendNotificationApp = async (message: string, deviceToken: string) => {
     try {
+      setLoading(true);
       await axios.post(
-        "https://api-send-notification-apps-expo.vercel.app/sendPushNotification",
+        process.env.NEXT_PUBLIC_URL_PUSH_NOTIFICATION as string,
         {
-          token_push_notification: "ExponentPushToken[yV4tBRHOpc5WR6ZXXd2g97]",
+          token_push_notification: deviceToken,
           message: message,
         }
       );
     } catch (error) {
-      console.error(error);
+      alert("Erro ao enviar notificação");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,7 +87,9 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
         status: idSaleSelected,
       });
 
-      await sendNotificationApp(messageNotification as string);
+      dataSales.client.listDevicesToken.forEach((token) => {
+        sendNotificationApp(messageNotification as string, token);
+      });
 
       if (responseUpdatesStatus.status) {
         toast({
@@ -99,7 +101,9 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
         });
         onClose();
 
-        window.location.reload();
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
       }
     } catch (error) {
       console.error(error);

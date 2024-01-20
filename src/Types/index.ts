@@ -12,6 +12,7 @@ export interface SalesProps {
   client: {
     id: string;
     username: string;
+    listDevicesToken: string[];
   };
 }
 
