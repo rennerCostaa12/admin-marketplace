@@ -18,6 +18,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { ButtonEditSales } from "./ButtonEditSales";
 import SelectSearch from "./SelectSearch";
 import ButtonPaginate from "./ButtonPaginate";
+import ModalSalesDetails from "./ButtonModalSales";
 
 import { ClientsProps, SalesPaginationProps, SalesProps } from "@/Types";
 
@@ -103,11 +104,13 @@ export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
               <Th>STATUS</Th>
               <Th>CLIENTE</Th>
               <Th>PREÇO</Th>
+              <Th>FORMA DE ENTREGA</Th>
               <Th isNumeric>AÇÕES</Th>
             </Tr>
           </Thead>
           <Tbody>
             {allSales?.items.map((value: SalesProps) => {
+              console.log(value);
               return (
                 <Tr key={value.id}>
                   <Td>{value.id}</Td>
@@ -120,15 +123,23 @@ export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
                       {value.status.name}
                     </Badge>
                   </Td>
-                  <Td fontWeight="bold">{value.client.username}</Td>
-                  <Td fontWeight="bold">
+                  <Td>{value.client.username}</Td>
+                  <Td>
                     {value.total.toLocaleString("pt-br", {
                       style: "currency",
                       currency: "BRL",
                     })}
                   </Td>
+                  <Td>{value.delivery.name}</Td>
                   <Td isNumeric>
-                    <ButtonEditSales dataSales={value} />
+                    <div className="flex justify-end items-center gap-4">
+                      <ModalSalesDetails
+                        listProducts={JSON.parse(value.list_products)}
+                        clientDatas={value.client}
+                        nameDelivery={value.delivery.name}
+                      />
+                      <ButtonEditSales dataSales={value} />
+                    </div>
                   </Td>
                 </Tr>
               );

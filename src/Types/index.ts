@@ -1,3 +1,20 @@
+export interface StatusSalesProps {
+  name: string;
+}
+
+export interface DeliverySalesProps {
+  name: string;
+}
+
+export interface ClientSalesProps {
+  id: string;
+  username: string;
+  listDevicesToken: string[];
+  address: string;
+  complement_address: string;
+  number_address: number;
+}
+
 export interface SalesProps {
   id: string;
   change_money: number;
@@ -6,14 +23,9 @@ export interface SalesProps {
   total: number;
   created_at: string;
   updated_at: string;
-  status: {
-    name: string;
-  };
-  client: {
-    id: string;
-    username: string;
-    listDevicesToken: string[];
-  };
+  status: StatusSalesProps;
+  client: ClientSalesProps;
+  delivery: DeliverySalesProps;
 }
 
 export interface MetaPaginationProps {
@@ -46,4 +58,13 @@ export interface ClientsProps {
 export interface OptionsSelectSearchProps {
   value: string;
   label: string;
+}
+
+export interface SalesProductsProps {
+  id: string;
+  nameItem: string;
+  priceItem: number;
+  quantity: number;
+  typeItem: string;
+  urlImg: string;
 }
