@@ -22,53 +22,21 @@ import ModalSalesDetails from "./ButtonModalSales";
 
 import { ClientsProps, SalesPaginationProps, SalesProps } from "@/Types";
 
-import { Api } from "@/configs/Api";
-
 import { Utils } from "@/utils";
 
 interface TableDashboardProps {
   allClients: ClientsProps[];
+  allSales: SalesPaginationProps | undefined;
 }
 
-export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
-  const [allSales, setAllSales] = useState<SalesPaginationProps | null>(null);
-
+export const TableDashboard = async ({
+  allClients,
+  allSales,
+}: TableDashboardProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const idClient = searchParams.get("id");
-  const statusSales = searchParams.get("status");
   const currentPage = searchParams.get("page");
-
-  const getAllSales = async () => {
-    try {
-      const responseSales = await Api.get(
-        `sales/findSalesWithPagination?page=${currentPage ? currentPage : "1"}`
-      );
-
-      if (responseSales.status) {
-        setAllSales(responseSales.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getSalesFiltered = async () => {
-    try {
-      const responseSalesFiltered = await Api.get(
-        `sales/findSales?client_id=${idClient ? idClient : ""}&status_sales=${
-          statusSales ? statusSales : ""
-        }`
-      );
-
-      if (responseSalesFiltered.status) {
-        setAllSales(responseSalesFiltered.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const clientsFormated = allClients?.map((value) => {
     return {
@@ -76,14 +44,6 @@ export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
       label: value.username,
     };
   });
-
-  useEffect(() => {
-    if (idClient || statusSales) {
-      getSalesFiltered();
-    } else {
-      getAllSales();
-    }
-  }, [idClient, statusSales]);
 
   useEffect(() => {
     if (!currentPage) {
@@ -110,7 +70,6 @@ export const TableDashboard = async ({ allClients }: TableDashboardProps) => {
           </Thead>
           <Tbody>
             {allSales?.items.map((value: SalesProps) => {
-              console.log(value);
               return (
                 <Tr key={value.id}>
                   <Td>{value.id}</Td>

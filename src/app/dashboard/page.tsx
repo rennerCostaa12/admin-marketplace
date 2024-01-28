@@ -1,11 +1,11 @@
-export const revalidate = 3600;
+export const revalidate = 60;
 
 import { TableDashboard } from "@/components/TableDashboard";
 import ButtonUpdate from "@/components/ButtonUpdate";
 
 import { Api } from "@/configs/Api";
 
-import { ClientsProps } from "@/Types";
+import { ClientsProps, SalesPaginationProps } from "@/Types";
 
 async function AllClientsDatas() {
   try {
@@ -19,8 +19,55 @@ async function AllClientsDatas() {
   }
 }
 
-export default async function Dashboard() {
+async function AllSalesData(page: string = "1") {
+  try {
+    const responseSales = await Api.get(
+      `sales/findSalesWithPagination?page=${page}`
+    );
+
+    if (responseSales.status) {
+      return responseSales.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getSalesFiltered(
+  idClient: string | undefined,
+  statusSales: string | undefined
+) {
+  if (!idClient && !statusSales) {
+    return;
+  }
+  try {
+    const responseSalesFiltered = await Api.get(
+      `sales/findSales?client_id=${idClient ? idClient : ""}&status_sales=${
+        statusSales ? statusSales : ""
+      }`
+    );
+
+    if (responseSalesFiltered.status) {
+      return responseSalesFiltered.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+interface DashboardProps {
+  searchParams: {
+    [key: string]: string | undefined;
+  };
+}
+
+export default async function Dashboard({ searchParams }: DashboardProps) {
   const allClients: ClientsProps[] = await AllClientsDatas();
+  const allSales: SalesPaginationProps = await AllSalesData(searchParams.page);
+  const salesFiltered: SalesPaginationProps = await getSalesFiltered(
+    searchParams.id,
+    searchParams.status
+  );
 
   return (
     <main>
@@ -28,7 +75,10 @@ export default async function Dashboard() {
         <div className="w-auto mx-4 my-6 flex justify-end flex-end">
           <ButtonUpdate />
         </div>
-        <TableDashboard allClients={allClients} />
+        <TableDashboard
+          allClients={allClients}
+          allSales={salesFiltered ? salesFiltered : allSales}
+        />
       </div>
     </main>
   );

@@ -40,7 +40,7 @@ export default function ModalSalesDetails({
 
   return (
     <div>
-      <Button onClick={onOpen} title="Visualizar pedido" variant="ghost">
+      <Button onClick={onOpen} title="Visualizar pedido" variant="outline">
         <FaFileInvoice />
       </Button>
       <ModalChakra

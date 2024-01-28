@@ -15,6 +15,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 import { useState } from "react";
@@ -48,6 +49,8 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
 
   const toast = useToast();
+
+  const router = useRouter();
 
   const sendNotificationApp = async (message: string, deviceToken: string) => {
     try {
@@ -101,9 +104,7 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
         });
         onClose();
 
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
+        router.refresh();
       }
     } catch (error) {
       console.error(error);

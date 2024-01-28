@@ -1,8 +1,10 @@
 export class Utils {
   static checkSessionUser() {
-    const token = localStorage.getItem("@Marketplace:admin_token_user");
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("@Marketplace:admin_token_user");
 
-    return token ? true : false;
+      return token ? true : false;
+    }
   }
 
   static switchColorsStatus(nameStatus: string) {
