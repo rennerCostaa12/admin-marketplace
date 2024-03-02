@@ -10,15 +10,25 @@ export class Utils {
   static switchColorsStatus(nameStatus: string) {
     switch (nameStatus) {
       case "AGUARDANDO VISUALIZAÇÃO":
-        return "gray";
+        return "awaiting-preview";
       case "PREPARANDO PEDIDO":
-        return "orange";
+        return "preparing-order";
       case "A CAMINHO":
-        return "blue";
+        return "on-my-way";
       case "FINALIZADO":
-        return "green";
+        return "order-completed";
       default:
-        return "gray";
+        return "awaiting-preview";
     }
+  }
+
+  static getValueLocalStorage(nameKey: string) {
+    const response = localStorage.getItem(nameKey);
+
+    if (response) {
+      return JSON.parse(response);
+    }
+
+    return null;
   }
 }

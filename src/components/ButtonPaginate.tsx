@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@chakra-ui/react";
+import { Button } from "./ui/button";
 
 export default function ButtonPaginate() {
   const router = useRouter();
@@ -16,12 +16,7 @@ export default function ButtonPaginate() {
   };
 
   return (
-    <Button
-      onClick={handleNextPage}
-      size="md"
-      colorScheme="pink"
-      variant="outline"
-    >
+    <Button onClick={handleNextPage} variant="outline">
       Ver Mais
     </Button>
   );

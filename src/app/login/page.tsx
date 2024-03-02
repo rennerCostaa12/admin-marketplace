@@ -1,12 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { Input, InputGroup, InputLeftElement, Button } from "@chakra-ui/react";
-import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import { ToastContainer, toast } from "react-toastify";
 
 import { useAuthContext } from "@/contexts/Auth";
@@ -105,29 +105,14 @@ export default function Login() {
           </h1>
 
           <div className="w-full flex flex-col gap-4">
-            <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <EmailIcon color="gray.300" />
-              </InputLeftElement>
-              <Input name="email" placeholder="Email" type="email" />
-            </InputGroup>
-            <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <LockIcon color="gray.300" />
-              </InputLeftElement>
-              <Input name="password" placeholder="Senha" type="password" />
-            </InputGroup>
+            <Input name="email" placeholder="Email" type="email" />
+            <Input name="password" placeholder="Senha" type="password" />
+
             <span className="text-slate-600 text-right cursor-pointer text-sm hover:text-black ease-in duration-300">
               Esqueci minha senha
             </span>
 
-            <Button
-              type="submit"
-              className="mt-6"
-              colorScheme="pink"
-              width="auto"
-              isLoading={loading}
-            >
+            <Button type="submit" className="mt-6" loading={loading}>
               Login
             </Button>
           </div>

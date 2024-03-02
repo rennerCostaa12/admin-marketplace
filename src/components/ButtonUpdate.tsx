@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { GrUpdate } from "react-icons/gr";
+import { Button } from "./ui/button";
+import { RefreshCcw } from "lucide-react";
 
 export default function ButtonUpdate() {
   const router = useRouter();
@@ -12,13 +12,8 @@ export default function ButtonUpdate() {
   };
 
   return (
-    <Button
-      onClick={handleUpdate}
-      leftIcon={<GrUpdate />}
-      colorScheme="pink"
-      variant="solid"
-      size="md"
-    >
+    <Button onClick={handleUpdate}>
+      <RefreshCcw size={16} />
       Atualizar
     </Button>
   );

@@ -1,18 +1,13 @@
 "use client";
-
-import { Skeleton, Stack } from "@chakra-ui/react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="m-10">
-      <Stack>
-        <Skeleton height="40px" />
-        <Skeleton height="40px" />
-        <Skeleton height="40px" />
-        <Skeleton height="40px" />
-        <Skeleton height="40px" />
-        <Skeleton height="40px" />
-      </Stack>
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="h-4 w-[250px]" />
+      <Skeleton className="h-4 w-[200px]" />
+      <Skeleton className="h-4 w-[200px]" />
+      <Skeleton className="h-4 w-[200px]" />
     </div>
   );
 }

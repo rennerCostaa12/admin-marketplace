@@ -1,20 +1,23 @@
 "use client";
 
-import { EditIcon } from "@chakra-ui/icons";
+import { Button } from "./ui/button";
+
 import {
-  Button,
   Popover,
-  PopoverHeader,
-  PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  PopoverFooter,
-  ButtonGroup,
-  useDisclosure,
+} from "@/components/ui/popover";
+
+import { useToast } from "@/components/ui/use-toast";
+
+import {
   Select,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -22,6 +25,7 @@ import { useState } from "react";
 
 import { SalesProps } from "@/Types";
 import { Api } from "@/configs/Api";
+import { Pencil } from "lucide-react";
 
 interface ButtonEditSalesProps {
   dataSales: SalesProps;
@@ -46,11 +50,9 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
   const [idSaleSelected, setIdSaleSelected] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { isOpen, onToggle, onClose } = useDisclosure();
-
-  const toast = useToast();
-
   const router = useRouter();
+
+  const { toast } = useToast();
 
   const sendNotificationApp = async (message: string, deviceToken: string) => {
     try {
@@ -71,13 +73,7 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
 
   const handleUpdateStatus = async () => {
     if (!idSaleSelected || idSaleSelected === 0) {
-      toast({
-        title: "Status alterado com sucesso!",
-        description: "",
-        status: "success",
-        duration: 1000,
-        isClosable: true,
-      });
+      alert("Escolha o status para alterar");
       return;
     }
 
@@ -96,14 +92,8 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
 
       if (responseUpdatesStatus.status) {
         toast({
-          title: "Status alterado com sucesso!",
-          description: "",
-          status: "success",
-          duration: 1000,
-          isClosable: true,
+          description: "Your message has been sent.",
         });
-        onClose();
-
         router.refresh();
       }
     } catch (error) {
@@ -114,58 +104,44 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
   };
 
   return (
-    <Popover
-      returnFocusOnClose={false}
-      isOpen={isOpen}
-      onClose={onClose}
-      placement="right"
-      closeOnBlur
-      closeOnEsc
-    >
-      <PopoverTrigger>
-        <Button
-          onClick={onToggle}
-          leftIcon={<EditIcon />}
-          colorScheme="pink"
-          variant="solid"
-          size="sm"
-        >
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button>
+          <Pencil size={16} />
           Editar
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverHeader>
-          <div className="w-full flex justify-center">
-            <Text fontSize="md" as="b" align="center">
+      <PopoverContent className="w-80">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">
               Alterar status do pedido
-            </Text>
+            </h4>
           </div>
-        </PopoverHeader>
-        <PopoverBody>
-          <Select
-            placeholder="Escolha o status"
-            onChange={(event) => setIdSaleSelected(Number(event.target.value))}
-          >
-            <option value={4}>AGUARDANDO VISUALIZAÇÃO</option>
-            <option value={3}>PREPARANDO PEDIDO</option>
-            <option value={2}>A CAMINHO</option>
-            <option value={1}>FINALIZADO</option>
-          </Select>
-        </PopoverBody>
-        <PopoverFooter>
-          <ButtonGroup size="sm">
-            <Button variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
+          <div>
+            <Select onValueChange={(value) => setIdSaleSelected(Number(value))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="4">AGUARDANDO VISUALIZAÇÃO</SelectItem>
+                <SelectItem value="3">PREPARANDO PEDIDO</SelectItem>
+                <SelectItem value="2">A CAMINHO</SelectItem>
+                <SelectItem value="1">FINALIZADO</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="border-t-2 space-y-4 py-2 w-full">
             <Button
-              colorScheme="pink"
+              className="w-full"
               onClick={handleUpdateStatus}
-              isLoading={loading}
+              loading={loading}
             >
               Salvar
             </Button>
-          </ButtonGroup>
-        </PopoverFooter>
+          </div>
+        </div>
       </PopoverContent>
     </Popover>
   );

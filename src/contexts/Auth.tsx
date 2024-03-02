@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import Cookies from "universal-cookie";
 
 import { Api } from "@/configs/Api";
 
@@ -37,6 +38,21 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     undefined
   );
 
+  const cookies = new Cookies();
+
+  const updateHeaders = async (token?: string | undefined) => {
+    if (token) {
+      cookies.set("@Marketplace:admin_token_user", token);
+      Api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    } else {
+      const tokenStorage = cookies.get("@Marketplace:admin_token_user");
+
+      if (tokenStorage) {
+        Api.defaults.headers.common.Authorization = `Bearer ${tokenStorage}`;
+      }
+    }
+  };
+
   const signIn = async (
     email: string,
     password: string
@@ -57,6 +73,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
           JSON.stringify(responseSignIn.data.user)
         );
         setDatasUser(responseSignIn.data.user);
+
+        updateHeaders(responseSignIn.data.access_token);
       }
 
       return {
@@ -74,6 +92,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const signOut = () => {
     localStorage.removeItem("@Marketplace:admin_token_user");
     localStorage.removeItem("@Marketplace:datas_user");
+    cookies.remove("@Marketplace:admin_token_user");
   };
 
   useEffect(() => {
@@ -82,6 +101,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     if (responseDatasUser) {
       setDatasUser(JSON.parse(responseDatasUser));
     }
+    updateHeaders();
   }, []);
 
   return (

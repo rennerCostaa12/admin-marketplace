@@ -1,5 +1,6 @@
 export const revalidate = 60;
 
+import { cookies } from "next/headers";
 import { TableDashboard } from "@/components/TableDashboard";
 import ButtonUpdate from "@/components/ButtonUpdate";
 
@@ -62,6 +63,12 @@ interface DashboardProps {
 }
 
 export default async function Dashboard({ searchParams }: DashboardProps) {
+  const cookiesStore = cookies();
+
+  Api.defaults.headers.common.Authorization = `Bearer ${
+    cookiesStore.get("@Marketplace:admin_token_user")?.value
+  }`;
+
   const allClients: ClientsProps[] = await AllClientsDatas();
   const allSales: SalesPaginationProps = await AllSalesData(searchParams.page);
   const salesFiltered: SalesPaginationProps = await getSalesFiltered(
