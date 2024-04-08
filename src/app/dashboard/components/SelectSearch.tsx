@@ -20,14 +20,10 @@ import { useState } from "react";
 import { OptionsSelectSearchProps } from "@/Types";
 
 interface SelectSearchProps {
-  placeholder: string;
   options: OptionsSelectSearchProps[];
 }
 
-export default function SelectSearch({
-  placeholder,
-  options,
-}: SelectSearchProps) {
+export default function SelectSearch({ options }: SelectSearchProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -35,8 +31,6 @@ export default function SelectSearch({
     string | undefined
   >(undefined);
   const [statusSelected, setStatusSelected] = useState<string>("");
-
-  // const [isLoading, setIsLoading] = useState(false);
 
   const handleRedirectSearch = () => {
     router.push(
@@ -52,15 +46,6 @@ export default function SelectSearch({
 
   return (
     <div className="flex items-center gap-4 w-full">
-      {/* <SelectReact
-        size="md"
-        className="w-full"
-        colorScheme="purple"
-        placeholder={placeholder}
-        options={options}
-        onChange={(event) => setCodeClientSelected(event?.value)}
-      /> */}
-
       <Select
         className="w-72"
         isClearable

@@ -68,3 +68,25 @@ export interface SalesProductsProps {
   typeItem: string;
   urlImg: string;
 }
+
+export interface ProductsProps {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  img_product: string;
+  unavailable: boolean;
+  created_at: string;
+  updated_at: string;
+  categories: {
+    id: number;
+    name: string;
+    created_at: string;
+    update_at: string;
+  };
+}
+
+export interface ProductsPaginationProps {
+  items: ProductsProps[];
+  meta: MetaPaginationProps;
+}

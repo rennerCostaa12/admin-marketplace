@@ -10,15 +10,17 @@ export class Utils {
   static switchColorsStatus(nameStatus: string) {
     switch (nameStatus) {
       case "AGUARDANDO VISUALIZAÇÃO":
-        return "awaiting-preview";
+        return "outline";
       case "PREPARANDO PEDIDO":
-        return "preparing-order";
+        return "orange";
       case "A CAMINHO":
-        return "on-my-way";
+        return "blue";
       case "FINALIZADO":
-        return "order-completed";
+        return "green";
+      case "CANCELADO":
+        return "destructive";
       default:
-        return "awaiting-preview";
+        return "outline";
     }
   }
 

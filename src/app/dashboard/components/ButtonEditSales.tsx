@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "./ui/button";
+import axios, { AxiosError } from "axios";
+import { Button } from "@/components/ui/button";
 
 import {
   Popover,
@@ -16,10 +17,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "@/components/ui/select";
 
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 import { useState } from "react";
 
@@ -47,7 +47,7 @@ const switchMessageNotification = (id: number) => {
 };
 
 export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
-  const [idSaleSelected, setIdSaleSelected] = useState<number | null>(null);
+  const [statusSales, setStatusSales] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
@@ -72,7 +72,7 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
   };
 
   const handleUpdateStatus = async () => {
-    if (!idSaleSelected || idSaleSelected === 0) {
+    if (!statusSales || statusSales === 0) {
       alert("Escolha o status para alterar");
       return;
     }
@@ -80,10 +80,10 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
     try {
       setLoading(true);
 
-      const messageNotification = switchMessageNotification(idSaleSelected);
+      const messageNotification = switchMessageNotification(statusSales);
 
       const responseUpdatesStatus = await Api.patch(`sales/${dataSales.id}`, {
-        status: idSaleSelected,
+        status: statusSales,
       });
 
       dataSales.client.listDevicesToken.forEach((token) => {
@@ -92,12 +92,17 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
 
       if (responseUpdatesStatus.status) {
         toast({
-          description: "Your message has been sent.",
+          title: "Status atualizado com sucesso!",
+          variant: "success",
         });
         router.refresh();
       }
     } catch (error) {
-      console.error(error);
+      const responseError = error as AxiosError<any, any>;
+      toast({
+        title: responseError.response?.data.message,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -119,7 +124,7 @@ export const ButtonEditSales = ({ dataSales }: ButtonEditSalesProps) => {
             </h4>
           </div>
           <div>
-            <Select onValueChange={(value) => setIdSaleSelected(Number(value))}>
+            <Select onValueChange={(value) => setStatusSales(Number(value))}>
               <SelectTrigger>
                 <SelectValue placeholder="Status" />
               </SelectTrigger>

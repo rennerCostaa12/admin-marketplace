@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { NavHeader } from "@/components/NavHeader";
+import { NavHeader } from "./components/NavHeader";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -12,11 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-br">
-      <body>
-        <NavHeader />
-        {children}
-      </body>
-    </html>
+    <>
+      <NavHeader />
+      {children}
+    </>
   );
 }

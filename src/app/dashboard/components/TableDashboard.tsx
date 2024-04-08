@@ -1,18 +1,18 @@
-"use client";
-
 import { useEffect } from "react";
 
 import { useSearchParams, useRouter } from "next/navigation";
 
 import { ButtonEditSales } from "./ButtonEditSales";
 import SelectSearch from "./SelectSearch";
-import ButtonPaginate from "./ButtonPaginate";
 import ModalSalesDetails from "./ButtonModalSales";
-import { Badge } from "./Badge";
+import { Pagination } from "@/components/Pagination";
+
+import { Badge } from "@/components/ui/badge";
+
+import { Utils } from "@/utils";
 
 import { ClientsProps, SalesPaginationProps, SalesProps } from "@/Types";
 
-import { Utils } from "@/utils";
 import {
   Table,
   TableBody,
@@ -20,14 +20,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "@/components/ui/table";
 
 interface TableDashboardProps {
   allClients: ClientsProps[];
   allSales: SalesPaginationProps | undefined;
 }
 
-export const TableDashboard = async ({
+export const TableDashboard = ({
   allClients,
   allSales,
 }: TableDashboardProps) => {
@@ -35,6 +35,8 @@ export const TableDashboard = async ({
   const router = useRouter();
 
   const currentPage = searchParams.get("page");
+
+  const { switchColorsStatus } = Utils;
 
   const clientsFormated = allClients?.map((value) => {
     return {
@@ -52,7 +54,7 @@ export const TableDashboard = async ({
   return (
     <div>
       <div className="w-auto m-4">
-        <SelectSearch placeholder="Clientes" options={clientsFormated} />
+        <SelectSearch options={clientsFormated} />
       </div>
       <Table>
         <TableHeader>
@@ -71,9 +73,8 @@ export const TableDashboard = async ({
               <TableRow key={value.id}>
                 <TableCell>{value.id}</TableCell>
                 <TableCell>
-                  {" "}
                   <Badge
-                    color={Utils.switchColorsStatus(
+                    variant={switchColorsStatus(
                       value.status.name.toLocaleUpperCase()
                     )}
                   >
@@ -101,11 +102,8 @@ export const TableDashboard = async ({
           })}
         </TableBody>
       </Table>
-
-      {allSales && Number(currentPage) < allSales.meta.totalPages && (
-        <div className="flex justify-center my-6">
-          <ButtonPaginate />
-        </div>
+      {allSales && currentPage && (
+        <Pagination totalPages={allSales?.meta.totalPages} />
       )}
     </div>
   );

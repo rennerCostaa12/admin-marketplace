@@ -79,7 +79,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
 
       return {
         status: true,
-        message: "TUDO OK",
+        message: null,
       };
     } catch (error: any) {
       return {

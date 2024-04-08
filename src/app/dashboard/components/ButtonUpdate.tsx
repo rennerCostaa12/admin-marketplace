@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { RefreshCcw } from "lucide-react";
 
 export default function ButtonUpdate() {

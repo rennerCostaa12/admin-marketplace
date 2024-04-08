@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 
 import { SalesProductsProps, ClientSalesProps } from "@/Types";
@@ -43,7 +44,7 @@ export default function ModalSalesDetails({
         <div>
           {listProducts.map((value) => {
             return (
-              <div className="border-b-2 py-2">
+              <div className="border-b-2 py-2" key={value.id}>
                 <p>
                   {value.quantity}x - {value.nameItem} -{" "}
                   {value.priceItem.toLocaleString("pt-br", {
@@ -86,6 +87,10 @@ export default function ModalSalesDetails({
               })}
             </span>
           </div>
+
+          <DialogClose>
+            <Button variant="secondary">Fechar</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

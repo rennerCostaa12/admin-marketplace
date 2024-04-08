@@ -1,14 +1,17 @@
 export const revalidate = 60;
 
 import { cookies } from "next/headers";
-import { TableDashboard } from "@/components/TableDashboard";
-import ButtonUpdate from "@/components/ButtonUpdate";
+import { Tabs } from "./components/Tabs";
 
 import { Api } from "@/configs/Api";
 
-import { ClientsProps, SalesPaginationProps } from "@/Types";
+import {
+  ClientsProps,
+  ProductsPaginationProps,
+  SalesPaginationProps,
+} from "@/Types";
 
-async function AllClientsDatas() {
+const AllClientsDatas = async () => {
   try {
     const response = await Api.get("clients/listClients");
 
@@ -18,9 +21,9 @@ async function AllClientsDatas() {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
-async function AllSalesData(page: string = "1") {
+const AllSalesData = async (page: string = "1") => {
   try {
     const responseSales = await Api.get(
       `sales/findSalesWithPagination?page=${page}`
@@ -32,12 +35,12 @@ async function AllSalesData(page: string = "1") {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
-async function getSalesFiltered(
+const getSalesFiltered = async (
   idClient: string | undefined,
   statusSales: string | undefined
-) {
+) => {
   if (!idClient && !statusSales) {
     return;
   }
@@ -54,7 +57,37 @@ async function getSalesFiltered(
   } catch (error) {
     console.error(error);
   }
-}
+};
+
+const getProducts = async (page: string = "1") => {
+  try {
+    const responseProducts = await Api.get(`products?page=${page}`);
+
+    if (responseProducts.status) {
+      return responseProducts.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getProductsFiltered = async (nameProduct: string | undefined) => {
+  if (!nameProduct) {
+    return;
+  }
+
+  try {
+    const responseProducts = await Api.get(
+      `products/searchProducts/${nameProduct}`
+    );
+
+    if (responseProducts.status) {
+      return responseProducts.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 interface DashboardProps {
   searchParams: {
@@ -70,6 +103,12 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
   }`;
 
   const allClients: ClientsProps[] = await AllClientsDatas();
+  const allProducts: ProductsPaginationProps = await getProducts(
+    searchParams.page
+  );
+  const productsFiltered: ProductsPaginationProps = await getProductsFiltered(
+    searchParams.productName
+  );
   const allSales: SalesPaginationProps = await AllSalesData(searchParams.page);
   const salesFiltered: SalesPaginationProps = await getSalesFiltered(
     searchParams.id,
@@ -79,12 +118,10 @@ export default async function Dashboard({ searchParams }: DashboardProps) {
   return (
     <main>
       <div className="m-4">
-        <div className="w-auto mx-4 my-6 flex justify-end flex-end">
-          <ButtonUpdate />
-        </div>
-        <TableDashboard
+        <Tabs
           allClients={allClients}
           allSales={salesFiltered ? salesFiltered : allSales}
+          allProducts={productsFiltered ? productsFiltered : allProducts}
         />
       </div>
     </main>

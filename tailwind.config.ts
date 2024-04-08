@@ -23,11 +23,6 @@ const config = {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       colors: {
-        "deep-pink": "#FF1493",
-        "awaiting-preview": "gray",
-        "preparing-order": "orange",
-        "on-my-way": "blue",
-        "order-completed": "green",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

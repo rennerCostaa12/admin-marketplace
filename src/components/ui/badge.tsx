@@ -14,14 +14,9 @@ const badgeVariants = cva(
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        waiting_preview:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        preparing_order:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        on_my_away:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        order_completed:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        blue: "border-transparent bg-[#0096FF] text-destructive-foreground",
+        green: "border-transparent bg-[#008640] text-destructive-foreground",
+        orange: "border-transparent bg-[#E6A23C] text-destructive-foreground",
         outline: "text-foreground",
       },
     },

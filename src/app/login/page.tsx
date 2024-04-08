@@ -88,7 +88,7 @@ export default function Login() {
         theme="dark"
       />
       <div className="w-3/5 lg:h-3/6 min-w-96 h-auto flex flex-col lg:flex-row items-center border rounded">
-        <div className="lg:w-3/5 w-full h-full max-h-full flex justify-center items-center bg-deep-pink">
+        <div className="lg:w-3/5 w-full h-full max-h-full flex justify-center items-center bg-primary">
           <Image
             className="w-full"
             src={pathImgLogin}
