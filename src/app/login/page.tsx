@@ -14,10 +14,14 @@ import { useAuthContext } from "@/contexts/Auth";
 import pathImgLogin from "../../assets/marketplace-login.png";
 import { Utils } from "@/utils";
 
+import { ModalRecoveryPassword } from "./components/ModalRecoveryPassword";
+
 export default function Login() {
   const { signIn } = useAuthContext();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [modalRecoveryPassword, setModalRecoveryPassword] =
+    useState<boolean>(false);
 
   const router = useRouter();
 
@@ -32,11 +36,8 @@ export default function Login() {
     if (email === "" || password === "") {
       toast.warn("Preencha os campos!", {
         position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
+        autoClose: 2000,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
         progress: undefined,
         theme: "dark",
       });
@@ -52,11 +53,8 @@ export default function Login() {
       } else {
         toast.error(responseSignIn.message, {
           position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
+          autoClose: 2000,
           closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
           progress: undefined,
           theme: "dark",
         });
@@ -87,6 +85,12 @@ export default function Login() {
         pauseOnHover
         theme="dark"
       />
+
+      <ModalRecoveryPassword
+        openModalRecoveryPassword={modalRecoveryPassword}
+        setOpenModalRecoveryPassword={setModalRecoveryPassword}
+      />
+
       <div className="w-3/5 lg:h-3/6 min-w-96 h-auto flex flex-col lg:flex-row items-center border rounded">
         <div className="lg:w-3/5 w-full h-full max-h-full flex justify-center items-center bg-primary">
           <Image
@@ -108,7 +112,10 @@ export default function Login() {
             <Input name="email" placeholder="Email" type="email" />
             <Input name="password" placeholder="Senha" type="password" />
 
-            <span className="text-slate-600 text-right cursor-pointer text-sm hover:text-black ease-in duration-300">
+            <span
+              className="text-slate-600 text-right cursor-pointer text-sm hover:text-black ease-in duration-300"
+              onClick={() => setModalRecoveryPassword(true)}
+            >
               Esqueci minha senha
             </span>
 
