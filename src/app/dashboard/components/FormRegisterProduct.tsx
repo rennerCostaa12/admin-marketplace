@@ -20,6 +20,8 @@ import { Api } from "@/configs/Api";
 
 import { useAuthContext } from "@/contexts/Auth";
 
+import { categories_products } from "@/constants/categories_product";
+
 export const FormRegisterProduct = () => {
   const [nameProduct, setNameProduct] = useState<string>("");
   const [categoryProduct, setCategoryProduct] = useState<string>("");
@@ -147,10 +149,18 @@ export const FormRegisterProduct = () => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Categoria do Produto</SelectLabel>
-              <SelectItem value="1">Comida</SelectItem>
-              <SelectItem value="3">Bebida</SelectItem>
-              <SelectItem value="4">Limpeza</SelectItem>
-              <SelectItem value="8">Brinquedos</SelectItem>
+              <SelectItem value={String(categories_products.food)}>
+                Comida
+              </SelectItem>
+              <SelectItem value={String(categories_products.drink)}>
+                Bebida
+              </SelectItem>
+              <SelectItem value={String(categories_products.cleaning)}>
+                Limpeza
+              </SelectItem>
+              <SelectItem value={String(categories_products.toys)}>
+                Brinquedos
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

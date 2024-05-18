@@ -61,7 +61,7 @@ const getSalesFiltered = async (
 
 const getProducts = async (page: string = "1") => {
   try {
-    const responseProducts = await Api.get(`products?page=${page}`);
+    const responseProducts = await Api.get(`products?page=${page}&limit=15`);
 
     if (responseProducts.status) {
       return responseProducts.data;
