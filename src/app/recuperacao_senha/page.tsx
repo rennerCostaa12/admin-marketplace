@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
+
+import { AlertModal } from "@/components/AlertModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   Form,
   FormControl,
@@ -12,123 +15,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-import { z } from "zod";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
-import { Api } from "@/configs/Api";
-import { ToastContainer, toast } from "react-toastify";
-import axios, { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-
-import { AlertModal } from "@/components/AlertModal";
-
-const FormSchema = z.object({
-  password: z.string().min(7, {
-    message: "A senha deve ter pelo menos 7 caracteres.",
-  }),
-  confirm_password: z.string().min(7, {
-    message: "A confirmação de senha deve ter pelo menos 7 caracteres.",
-  }),
-});
-
-type TypeFormSchema = z.infer<typeof FormSchema>;
+import { useRecoveryPassword } from "./useRecoveryPassword";
 
 export default function RecoveryPassword() {
-  const form = useForm<TypeFormSchema>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      password: "",
-      confirm_password: "",
-    },
-  });
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isTokenUsed, setIsTokenUsed] = useState<boolean>(false);
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const token = searchParams.get("token");
-
-  const getTokens = async () => {
-    try {
-      const responseTokens = await axios.get("api/black_lists_tokens");
-
-      if (responseTokens.status) {
-        if (responseTokens.data.response.black_list_tokens.includes(token)) {
-          setIsTokenUsed(true);
-        }
-      }
-    } catch (error) {
-      const responseError = error as AxiosError<any, any>;
-      toast.error(responseError.response?.data.message, {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
-
-  const saveTokenBlackList = async () => {
-    try {
-      await axios.post("api/black_lists_tokens", {
-        token,
-      });
-    } catch (error) {
-      const responseError = error as AxiosError<any, any>;
-      toast.error(responseError.response?.data.message, {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
-
-  const handleChangePassword = async (data: TypeFormSchema) => {
-    try {
-      setLoading(true);
-      const responseChangePassword = await Api.post("admins/change-password", {
-        password: data.password,
-        confirm_password: data.confirm_password,
-        token,
-      });
-
-      if (responseChangePassword.status) {
-        toast.success("Senha trocada com sucesso!", {
-          position: "top-right",
-          autoClose: 2000,
-          closeOnClick: true,
-          progress: undefined,
-          theme: "dark",
-        });
-
-        saveTokenBlackList();
-
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
-      }
-    } catch (error) {
-      const responseError = error as AxiosError<any, any>;
-      toast.error(responseError.response?.data.message, {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    getTokens,
+    form,
+    isTokenUsed,
+    handleChangePassword,
+    loading,
+    router,
+  } = useRecoveryPassword();
 
   useEffect(() => {
     getTokens();

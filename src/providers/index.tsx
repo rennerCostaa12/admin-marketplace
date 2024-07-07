@@ -1,14 +1,18 @@
 "use client";
 
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
 
 import { AuthContextProvider } from "@/contexts/Auth";
+import { SidebarContextProvider } from "@/contexts/Sidebar";
 
 interface ProvidersProps {
   children: ReactNode;
 }
 
 export const Providers = ({ children }: ProvidersProps) => {
-  return <AuthContextProvider>{children}</AuthContextProvider>;
+  return (
+    <AuthContextProvider>
+      <SidebarContextProvider>{children}</SidebarContextProvider>
+    </AuthContextProvider>
+  );
 };

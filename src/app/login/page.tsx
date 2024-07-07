@@ -1,74 +1,33 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
+import { useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 
-import { ToastContainer, toast } from "react-toastify";
-
-import { useAuthContext } from "@/contexts/Auth";
-
-import pathImgLogin from "../../assets/marketplace-login.png";
-import { Utils } from "@/utils";
-
+import { Button } from "@/components/ui/button";
 import { ModalRecoveryPassword } from "./components/ModalRecoveryPassword";
+import { Input } from "@/components/Input";
+import { Utils } from "@/utils";
+import pathImgLogin from "../../assets/marketplace-login.png";
+import { useLogin } from "./useLogin";
 
 export default function Login() {
-  const { signIn } = useAuthContext();
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [modalRecoveryPassword, setModalRecoveryPassword] =
-    useState<boolean>(false);
-
-  const router = useRouter();
-
-  const handleLogin = async (event: FormEvent) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target as HTMLFormElement);
-
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    if (email === "" || password === "") {
-      toast.warn("Preencha os campos!", {
-        position: "top-right",
-        autoClose: 2000,
-        closeOnClick: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const responseSignIn = await signIn(email, password);
-
-      if (responseSignIn.status) {
-        router.push("/dashboard?page=1");
-      } else {
-        toast.error(responseSignIn.message, {
-          position: "top-right",
-          autoClose: 2000,
-          closeOnClick: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    handleLogin,
+    loading,
+    setModalRecoveryPassword,
+    modalRecoveryPassword,
+    handleSubmit,
+    router,
+    Controller,
+    control,
+  } = useLogin();
 
   useEffect(() => {
     const userIsAuthenticated = Utils.checkSessionUser();
 
     if (userIsAuthenticated) {
-      router.push("/dashboard?page=1");
+      router.push("/admin/dashboard?page=1");
     }
   }, []);
 
@@ -102,15 +61,54 @@ export default function Login() {
 
         <form
           className="lg:w-2/5 w-2/3 min-w-min h-full flex flex-col justify-center items-center bg-white lg:px-6 py-6"
-          onSubmit={handleLogin}
+          onSubmit={handleSubmit(handleLogin)}
         >
           <h1 className="text-black text-2xl text-center mb-4 font-bold">
             LOGIN
           </h1>
 
           <div className="w-full flex flex-col gap-4">
-            <Input name="email" placeholder="Email" type="email" />
-            <Input name="password" placeholder="Senha" type="password" />
+            <Controller
+              control={control}
+              name="email"
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <Input.Root>
+                  <Input.InputContent
+                    placeholder="Email"
+                    type="email"
+                    onChange={onChange}
+                    value={value}
+                  />
+                  {error?.message && (
+                    <Input.InputMessage text={error.message} color="error" />
+                  )}
+                </Input.Root>
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="password"
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <Input.Root>
+                  <Input.InputContent
+                    placeholder="Senha"
+                    type="password"
+                    onChange={onChange}
+                    value={value}
+                  />
+                  {error?.message && (
+                    <Input.InputMessage text={error.message} color="error" />
+                  )}
+                </Input.Root>
+              )}
+            />
 
             <span
               className="text-slate-600 text-right cursor-pointer text-sm hover:text-black ease-in duration-300"
